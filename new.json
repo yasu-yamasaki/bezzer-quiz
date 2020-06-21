@@ -1,0 +1,37 @@
+{
+  "provider": {
+    "_config": {
+      "aws_project_region": "ap-northeast-1",
+      "aws_appsync_graphqlEndpoint": "https://lwqrj2t2fvbmhn7h4f3gdjobje.appsync-api.ap-northeast-1.amazonaws.com/graphql",
+      "aws_appsync_region": "ap-northeast-1",
+      "aws_appsync_authenticationType": "API_KEY",
+      "aws_appsync_apiKey": "da2-rvfi7wlrvjf2xmv7krqpnt73hm"
+    },
+    "socketStatus": 1,
+    "keepAliveTimeout": 300000,
+    "subscriptionObserverMap": {},
+    "promiseArray": [],
+    "awsRealTimeSocket": {},
+    "keepAliveTimeoutId": 17
+  },
+  "value": {
+    "data": {
+      "onUpdateSession": {
+        "id": "ab93a323-5527-4b96-8f2e-5571dcfc6e35",
+        "createdAt": "2020-06-21T12:49:50.075Z",
+        "joined": 0,
+        "host": {
+          "id": "asn9n810",
+          "name": "dddd"
+        },
+        "guest": {
+          "id": "vuahxsz7",
+          "name": "ddd"
+        },
+        "version": 2,
+        "events": [],
+        "updatedAt": "2020-06-21T12:50:07.655Z"
+      }
+    }
+  }
+}

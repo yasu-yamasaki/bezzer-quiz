@@ -1,17 +1,19 @@
 <template>
     <v-container>
-        <v-row>
-            まずはニックネームを決めよう
-        </v-row>
-        <v-row>
-            <v-text-field
-                    v-model="nickname"
-                    label="Nickname"
-            ></v-text-field>
-        </v-row>
-        <v-row>
-            <v-btn @click="submit" :disabled="!nickname">入場</v-btn>
-        </v-row>
+        <v-list>
+            <v-list-item>
+                まずはニックネームを決めよう
+            </v-list-item>
+            <v-list-item>
+                <v-text-field
+                        v-model="nickname"
+                        label="Nickname"
+                ></v-text-field>
+            </v-list-item>
+            <v-list-item>
+                <v-btn @click="submit" :disabled="!nickname">入場</v-btn>
+            </v-list-item>
+        </v-list>
     </v-container>
 </template>
 

@@ -1,14 +1,34 @@
 <template>
     <v-container>
-        <v-row>
-            マッチング
-        </v-row>
-        <v-row v-if="!session">
-            {{status}}
-        </v-row>
-        <v-row v-else>
-            {{ session }}
-        </v-row>
+        <v-list>
+            <template v-for="(message, index) in messages">
+                <v-list-item-content>
+                    <v-list-item-title>{{message}}</v-list-item-title>
+                </v-list-item-content>
+                <v-divider></v-divider>
+            </template>
+            <template v-if="session">
+                <v-list-item>
+                    <v-list-item-title>
+                        {{ isHost ? session.guest.name : session.host.name }}さんと繋がりました。
+                    </v-list-item-title>
+                </v-list-item>
+                <v-list-item>
+                    <v-text-field
+                            v-model="message"
+                            label="message"
+                    ></v-text-field>
+                    <v-btn @click="sendMessage">送信</v-btn>
+                </v-list-item>
+                <v-divider></v-divider>
+                <template v-for="event in session.events">
+                    <v-list-item-content>
+                        <v-list-item-title>{{event}}</v-list-item-title>
+                    </v-list-item-content>
+                    <v-divider></v-divider>
+                </template>
+            </template>
+        </v-list>
     </v-container>
 </template>
 
@@ -19,7 +39,7 @@
   import {API, graphqlOperation} from 'aws-amplify'
   import {createSession, updateSession} from '@/graphql/mutations'
   import {
-    CreateSessionInput,
+    CreateSessionInput, CreateSessionMutation,
     CreateSessionMutationVariables,
     ListSessionsQuery,
     ListSessionsQueryVariables,
@@ -28,7 +48,7 @@
     UpdateSessionMutationVariables
   } from '@/API'
   import {listSessions} from '@/graphql/queries'
-  import {onUpdateSession} from '@/graphql/subscriptions'
+  import {onUpdateSession, onUpdateSessionSubscription} from '@/graphql/subscriptions'
   import Observable from 'zen-observable-ts'
 
   const moment = require('moment')
@@ -37,26 +57,24 @@
   export default class Room extends Vue {
     @Prop()
     user!: User
-    status: string = '開始準備中'
+    messages: string[] = ['マッチング開始']
+    message: string = ''
     session: any = null
+    isHost: boolean = false
 
     async created() {
-      console.log('a')
       await this.checkWaitSession()
-      console.log('c')
       if (this.session == null) {
-        console.log('e')
         await this.createSession()
       }
-      console.log('f')
       this.subscription()
     }
 
     async checkWaitSession() {
-      this.status = '空いているセッション検索中'
+      this.messages.push('空いているセッション検索中')
       let result: any = await API.graphql(graphqlOperation(listSessions, {
           filter: {
-            createdA: {gt: moment().add(-1, 'minute').toISOString()}
+            createdAt: {gt: moment().add(-2, 'minute').toISOString()}
           }
         } as ListSessionsQueryVariables
       ))
@@ -67,18 +85,26 @@
       if (!(sessions.listSessions?.items)) {
         return
       }
-      if (!sessions.listSessions?.items.length) {
+
+      let newSession: any = null
+      sessions.listSessions?.items.forEach((item: any) => {
+        if (!newSession && !item.guest) {
+          newSession = item
+        }
+      })
+      if (!newSession) {
         return
       }
-      this.session = sessions.listSessions?.items[0]
+      this.messages.push('見つかりました。')
+      this.session = newSession
       this.session.guest = this.user
       this.session.joined = 1
       await this.mutation()
     }
 
     async createSession() {
-      this.status = '新しいセッション作成中'
-      this.session = await API
+      this.messages.push('見つからないので、新しいセッション作成中')
+      const ret = await API
         .graphql(graphqlOperation(createSession, {
           input: {
             host: this.user,
@@ -86,7 +112,11 @@
             version: 1,
             events: []
           }
-        } as CreateSessionMutationVariables))
+        } as CreateSessionMutationVariables)) as any
+      this.messages.push('作成完了')
+      this.messages.push('見つかるまで待機')
+      this.isHost = true
+      this.session = ret.data.createSession
     }
 
     async mutation() {
@@ -104,15 +134,19 @@
       } as UpdateSessionMutationVariables))
     }
 
+    async sendMessage() {
+      this.session.events.push(this.message)
+      await this.mutation()
+    }
+
     subscription() {
-      console.log('subsc')
-      const result = (API.graphql(graphqlOperation(onUpdateSession, {
-          id: this.session.id
-        } as OnUpdateSessionSubscriptionSubscriptionVariables
-      ))) as Observable<object>
+      const result = (API.graphql(graphqlOperation(onUpdateSession))) as Observable<object>
       result.subscribe({
-        next: (data) => {
-          this.session = data
+        next: (data: any) => {
+          const updatedSession = data.value.data.onUpdateSession as any
+          if (updatedSession.id == this.session.id) {
+            this.session = updatedSession
+          }
         }
       })
     }
