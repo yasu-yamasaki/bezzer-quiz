@@ -4,7 +4,7 @@
             マッチング
         </v-row>
         <v-row v-if="!session">
-            {{status}}
+            {{status}},{{result}}
         </v-row>
         <v-row v-else>
             {{ session }}
@@ -17,9 +17,15 @@
   import {Component, Prop} from 'vue-property-decorator'
   import User from '@/domain/User'
   import {API, graphqlOperation} from 'aws-amplify'
-  import {createSession} from '@/graphql/mutations'
-  import {CreateSessionInput, CreateSessionMutationVariables, ListSessionsQueryVariables} from '@/API'
+  import {createSession, updateSession} from '@/graphql/mutations'
+  import {
+    CreateSessionInput,
+    CreateSessionMutationVariables,
+    ListSessionsQuery,
+    ListSessionsQueryVariables, OnUpdateSessionSubscription
+  } from '@/API'
   import {listSessions} from '@/graphql/queries'
+  import {onUpdateSession} from '@/graphql/subscriptions'
 
   @Component
   export default class Room extends Vue {
@@ -27,16 +33,14 @@
     user!: User
     status: string = '開始準備中'
 
-    session: any = {}
+    session: any = null
+    result: any = null
 
     async created() {
-      this.status = '空いているセッション検索中'
-      this.session = await API.graphql(graphqlOperation(listSessions, {
-          filter: {
-            id: {eq: null}
-          }
-        } as ListSessionsQueryVariables
-      ))
+      await this.checkWaitSession()
+      if (this.session != null) {
+        return
+      }
 
       this.session = await API
         .graphql(graphqlOperation(createSession, {
@@ -46,6 +50,31 @@
           }
 
         } as CreateSessionMutationVariables))
+    }
+
+    async checkWaitSession() {
+      this.status = '空いているセッション検索中'
+      let result: any = await API.graphql(graphqlOperation(listSessions, {
+          filter: {
+            joined: {eq: 0}
+          }
+        } as ListSessionsQueryVariables
+      ))
+      if (!('data' in result)) {
+        return
+      }
+      const sessions = result.data as ListSessionsQuery
+      if (!(sessions.listSessions?.items)) {
+        return
+      }
+      this.session = listSessions[0]
+      this.session.guest = this.user
+      this.session.joined = 1
+
+      this.session = await API
+        .graphql(graphqlOperation(onUpdateSession, {
+
+        } as OnUpdateSessionSubscription
     }
   }
 </script>

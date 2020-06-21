@@ -6,6 +6,8 @@ export const onCreateSession = /* GraphQL */ `
   subscription OnCreateSession {
     onCreateSession {
       id
+      createdAt
+      joined
       host {
         id
         name
@@ -14,7 +16,7 @@ export const onCreateSession = /* GraphQL */ `
         id
         name
       }
-      createdAt
+      event
       updatedAt
     }
   }
@@ -23,6 +25,8 @@ export const onUpdateSession = /* GraphQL */ `
   subscription OnUpdateSession {
     onUpdateSession {
       id
+      createdAt
+      joined
       host {
         id
         name
@@ -31,7 +35,7 @@ export const onUpdateSession = /* GraphQL */ `
         id
         name
       }
-      createdAt
+      event
       updatedAt
     }
   }
@@ -40,6 +44,8 @@ export const onDeleteSession = /* GraphQL */ `
   subscription OnDeleteSession {
     onDeleteSession {
       id
+      createdAt
+      joined
       host {
         id
         name
@@ -48,7 +54,7 @@ export const onDeleteSession = /* GraphQL */ `
         id
         name
       }
-      createdAt
+      event
       updatedAt
     }
   }
