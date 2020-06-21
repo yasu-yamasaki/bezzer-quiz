@@ -9,7 +9,6 @@ export const createSession = /* GraphQL */ `
   ) {
     createSession(input: $input, condition: $condition) {
       id
-      createdAt
       host {
         id
         name
@@ -18,10 +17,7 @@ export const createSession = /* GraphQL */ `
         id
         name
       }
-      quiz {
-        content
-        answer
-      }
+      createdAt
       updatedAt
     }
   }
@@ -33,7 +29,6 @@ export const updateSession = /* GraphQL */ `
   ) {
     updateSession(input: $input, condition: $condition) {
       id
-      createdAt
       host {
         id
         name
@@ -42,10 +37,7 @@ export const updateSession = /* GraphQL */ `
         id
         name
       }
-      quiz {
-        content
-        answer
-      }
+      createdAt
       updatedAt
     }
   }
@@ -57,7 +49,6 @@ export const deleteSession = /* GraphQL */ `
   ) {
     deleteSession(input: $input, condition: $condition) {
       id
-      createdAt
       host {
         id
         name
@@ -66,10 +57,7 @@ export const deleteSession = /* GraphQL */ `
         id
         name
       }
-      quiz {
-        content
-        answer
-      }
+      createdAt
       updatedAt
     }
   }

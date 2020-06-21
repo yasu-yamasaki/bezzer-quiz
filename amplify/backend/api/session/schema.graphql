@@ -1,17 +1,13 @@
-type Session @model {
-  id: ID!
-  createdAt: AWSDateTime!
-  host: User!
-  guest: User
-  quiz: Quiz
+type Session @model @key(fields: ["id", "createdAt", "joined"]) {
+    id: ID!
+    createdAt: AWSDateTime!
+    joined: Int!
+    host: User!
+    guest: User
+    event: [String]
 }
 
 type User {
-  id: ID!
-  name: String
-}
-
-type Quiz {
-  content: String!
-  answer: [String!]
+    id: ID!
+    name: String
 }

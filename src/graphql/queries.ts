@@ -6,7 +6,6 @@ export const getSession = /* GraphQL */ `
   query GetSession($id: ID!) {
     getSession(id: $id) {
       id
-      createdAt
       host {
         id
         name
@@ -15,10 +14,7 @@ export const getSession = /* GraphQL */ `
         id
         name
       }
-      quiz {
-        content
-        answer
-      }
+      createdAt
       updatedAt
     }
   }
@@ -32,7 +28,6 @@ export const listSessions = /* GraphQL */ `
     listSessions(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        createdAt
         host {
           id
           name
@@ -41,10 +36,7 @@ export const listSessions = /* GraphQL */ `
           id
           name
         }
-        quiz {
-          content
-          answer
-        }
+        createdAt
         updatedAt
       }
       nextToken
