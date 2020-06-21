@@ -1,27 +1,35 @@
 <template>
-  <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      早押しクイズ
-    </v-app-bar>
-
-    <v-content>
-      <HelloWorld/>
-    </v-content>
-  </v-app>
+    <v-app>
+        <v-app-bar
+                app
+                color="primary"
+                dark
+        >
+            早押しクイズ
+            <v-spacer></v-spacer>
+            <span v-if="user.name">ようこそ {{ user.name }}さん</span>
+        </v-app-bar>
+        <v-main>
+            <InputName @setName="setName"/>
+        </v-main>
+    </v-app>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import HelloWorld from './components/HelloWorld.vue';
+  import {Component, Vue} from 'vue-property-decorator'
+  import User, {createUser} from '@/domain/User'
+  import InputName from '@/components/InputName.vue'
 
-@Component({
-  components: {
-    HelloWorld,
-  },
-})
-export default class App extends Vue {}
+  @Component({
+    components: {
+      InputName,
+    },
+  })
+  export default class App extends Vue {
+    user: User = createUser()
+
+    setName(name: string) {
+      this.user.name = name
+    }
+  }
 </script>
