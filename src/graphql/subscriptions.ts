@@ -2,6 +2,26 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
+export const onUpdateSessionSubscription = /* GraphQL */ `
+  subscription OnUpdateSessionSubscription($id: ID!) {
+    onUpdateSessionSubscription(id: $id) {
+      id
+      createdAt
+      joined
+      host {
+        id
+        name
+      }
+      guest {
+        id
+        name
+      }
+      version
+      events
+      updatedAt
+    }
+  }
+`;
 export const onCreateSession = /* GraphQL */ `
   subscription OnCreateSession {
     onCreateSession {
@@ -16,7 +36,8 @@ export const onCreateSession = /* GraphQL */ `
         id
         name
       }
-      event
+      version
+      events
       updatedAt
     }
   }
@@ -35,7 +56,8 @@ export const onUpdateSession = /* GraphQL */ `
         id
         name
       }
-      event
+      version
+      events
       updatedAt
     }
   }
@@ -54,7 +76,8 @@ export const onDeleteSession = /* GraphQL */ `
         id
         name
       }
-      event
+      version
+      events
       updatedAt
     }
   }

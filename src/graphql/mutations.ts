@@ -19,7 +19,8 @@ export const createSession = /* GraphQL */ `
         id
         name
       }
-      event
+      version
+      events
       updatedAt
     }
   }
@@ -41,7 +42,8 @@ export const updateSession = /* GraphQL */ `
         id
         name
       }
-      event
+      version
+      events
       updatedAt
     }
   }
@@ -63,7 +65,8 @@ export const deleteSession = /* GraphQL */ `
         id
         name
       }
-      event
+      version
+      events
       updatedAt
     }
   }

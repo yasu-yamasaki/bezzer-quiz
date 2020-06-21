@@ -4,10 +4,15 @@ type Session @model @key(fields: ["id", "createdAt", "joined"]) {
     joined: Int!
     host: User!
     guest: User
-    event: [String]
+    version: Int!
+    events: [String!]
 }
 
 type User {
     id: ID!
     name: String
+}
+
+type Subscription {
+    onUpdateSessionSubscription(id: ID!): Session @aws_subscribe(mutations: ["updateSession"])
 }

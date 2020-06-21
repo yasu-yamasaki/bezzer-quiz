@@ -8,7 +8,8 @@ export type CreateSessionInput = {
   joined: number,
   host: UserInput,
   guest?: UserInput | null,
-  event?: Array< string | null > | null,
+  version: number,
+  events?: Array< string > | null,
 };
 
 export type UserInput = {
@@ -17,11 +18,38 @@ export type UserInput = {
 };
 
 export type ModelSessionConditionInput = {
-  event?: ModelStringInput | null,
+  version?: ModelIntInput | null,
+  events?: ModelStringInput | null,
   and?: Array< ModelSessionConditionInput | null > | null,
   or?: Array< ModelSessionConditionInput | null > | null,
   not?: ModelSessionConditionInput | null,
 };
+
+export type ModelIntInput = {
+  ne?: number | null,
+  eq?: number | null,
+  le?: number | null,
+  lt?: number | null,
+  ge?: number | null,
+  gt?: number | null,
+  between?: Array< number | null > | null,
+  attributeExists?: boolean | null,
+  attributeType?: ModelAttributeTypes | null,
+};
+
+export enum ModelAttributeTypes {
+  binary = "binary",
+  binarySet = "binarySet",
+  bool = "bool",
+  list = "list",
+  map = "map",
+  number = "number",
+  numberSet = "numberSet",
+  string = "string",
+  stringSet = "stringSet",
+  _null = "_null",
+}
+
 
 export type ModelStringInput = {
   ne?: string | null,
@@ -39,20 +67,6 @@ export type ModelStringInput = {
   size?: ModelSizeInput | null,
 };
 
-export enum ModelAttributeTypes {
-  binary = "binary",
-  binarySet = "binarySet",
-  bool = "bool",
-  list = "list",
-  map = "map",
-  number = "number",
-  numberSet = "numberSet",
-  string = "string",
-  stringSet = "stringSet",
-  _null = "_null",
-}
-
-
 export type ModelSizeInput = {
   ne?: number | null,
   eq?: number | null,
@@ -69,7 +83,8 @@ export type UpdateSessionInput = {
   joined: number,
   host?: UserInput | null,
   guest?: UserInput | null,
-  event?: Array< string | null > | null,
+  version?: number | null,
+  events?: Array< string > | null,
 };
 
 export type DeleteSessionInput = {
@@ -97,7 +112,8 @@ export type ModelSessionFilterInput = {
   id?: ModelIDInput | null,
   createdAt?: ModelStringInput | null,
   joined?: ModelIntInput | null,
-  event?: ModelStringInput | null,
+  version?: ModelIntInput | null,
+  events?: ModelStringInput | null,
   and?: Array< ModelSessionFilterInput | null > | null,
   or?: Array< ModelSessionFilterInput | null > | null,
   not?: ModelSessionFilterInput | null,
@@ -117,18 +133,6 @@ export type ModelIDInput = {
   attributeExists?: boolean | null,
   attributeType?: ModelAttributeTypes | null,
   size?: ModelSizeInput | null,
-};
-
-export type ModelIntInput = {
-  ne?: number | null,
-  eq?: number | null,
-  le?: number | null,
-  lt?: number | null,
-  ge?: number | null,
-  gt?: number | null,
-  between?: Array< number | null > | null,
-  attributeExists?: boolean | null,
-  attributeType?: ModelAttributeTypes | null,
 };
 
 export enum ModelSortDirection {
@@ -158,7 +162,8 @@ export type CreateSessionMutation = {
       id: string,
       name: string | null,
     } | null,
-    event: Array< string | null > | null,
+    version: number,
+    events: Array< string > | null,
     updatedAt: string,
   } | null,
 };
@@ -184,7 +189,8 @@ export type UpdateSessionMutation = {
       id: string,
       name: string | null,
     } | null,
-    event: Array< string | null > | null,
+    version: number,
+    events: Array< string > | null,
     updatedAt: string,
   } | null,
 };
@@ -210,7 +216,8 @@ export type DeleteSessionMutation = {
       id: string,
       name: string | null,
     } | null,
-    event: Array< string | null > | null,
+    version: number,
+    events: Array< string > | null,
     updatedAt: string,
   } | null,
 };
@@ -237,7 +244,8 @@ export type GetSessionQuery = {
       id: string,
       name: string | null,
     } | null,
-    event: Array< string | null > | null,
+    version: number,
+    events: Array< string > | null,
     updatedAt: string,
   } | null,
 };
@@ -269,10 +277,37 @@ export type ListSessionsQuery = {
         id: string,
         name: string | null,
       } | null,
-      event: Array< string | null > | null,
+      version: number,
+      events: Array< string > | null,
       updatedAt: string,
     } | null > | null,
     nextToken: string | null,
+  } | null,
+};
+
+export type OnUpdateSessionSubscriptionSubscriptionVariables = {
+  id: string,
+};
+
+export type OnUpdateSessionSubscriptionSubscription = {
+  onUpdateSessionSubscription:  {
+    __typename: "Session",
+    id: string,
+    createdAt: string,
+    joined: number,
+    host:  {
+      __typename: "User",
+      id: string,
+      name: string | null,
+    },
+    guest:  {
+      __typename: "User",
+      id: string,
+      name: string | null,
+    } | null,
+    version: number,
+    events: Array< string > | null,
+    updatedAt: string,
   } | null,
 };
 
@@ -292,7 +327,8 @@ export type OnCreateSessionSubscription = {
       id: string,
       name: string | null,
     } | null,
-    event: Array< string | null > | null,
+    version: number,
+    events: Array< string > | null,
     updatedAt: string,
   } | null,
 };
@@ -313,7 +349,8 @@ export type OnUpdateSessionSubscription = {
       id: string,
       name: string | null,
     } | null,
-    event: Array< string | null > | null,
+    version: number,
+    events: Array< string > | null,
     updatedAt: string,
   } | null,
 };
@@ -334,7 +371,8 @@ export type OnDeleteSessionSubscription = {
       id: string,
       name: string | null,
     } | null,
-    event: Array< string | null > | null,
+    version: number,
+    events: Array< string > | null,
     updatedAt: string,
   } | null,
 };

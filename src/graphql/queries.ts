@@ -16,7 +16,8 @@ export const getSession = /* GraphQL */ `
         id
         name
       }
-      event
+      version
+      events
       updatedAt
     }
   }
@@ -50,7 +51,8 @@ export const listSessions = /* GraphQL */ `
           id
           name
         }
-        event
+        version
+        events
         updatedAt
       }
       nextToken
