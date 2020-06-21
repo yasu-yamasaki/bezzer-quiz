@@ -1,0 +1,17 @@
+type Session @model {
+  id: ID!
+  createdAt: AWSDateTime!
+  host: User!
+  guest: User
+  quiz: Quiz
+}
+
+type User {
+  id: ID!
+  name: String
+}
+
+type Quiz {
+  content: String!
+  answer: [String!]
+}
